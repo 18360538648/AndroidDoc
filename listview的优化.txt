@@ -1,0 +1,9 @@
+listView的优化
+1，convertView的复用。
+创建每一个itenm的view是一个耗时操作，当如果有多个item需要加载更是耗时，Android提供一个复用机制，当一个item划出屏幕时
+并不销毁，而回收利用。当屏幕中的下一个item要加载出来，就不用创建新的view，就直接使用复用池中的converview就行了
+2，viewHolder的使用。
+当创建一个view,需要通过findviewbyfind寻找每一个子view，这是一个耗时操作，如果把子view放在holder中，第一次创建view时，通过加findviewbyid加载子view，
+然后把holder放在convertview中的标签中，下一个复用convertview时，无需去findviewbyid,直接拿标签就行了，就能findviewbyid了。
+3，缓存数据（图片缓存）；
+4.分页加载。

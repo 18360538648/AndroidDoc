@@ -1,0 +1,1051 @@
+提问
+------------------------------
+1. 请简述你对基本数据类型和引用数据类型的理解
+基本数据类型：即数值型、字符型、布尔型，具体的表现为byte short int long float double char boolean
+引用数据类型：又称之为复合数据类型，或者对象型，表现为除了基本数据类型以外的所有数据类型，这类的数据类型在被创建时往往都会使用到new关键字
+区别：基本数据类型存储在栈内存中；而引用数据类型的引用存储在栈内存中，数据本身存储在堆内存中。
+
+2. 什么是内存，作用和特性分别是什么？
+在PC机中，内存表现为“内存条”，在手机中，内存表现为“运行内存”。
+内存的作用：用于保存正在执行的程序与数据。
+内存的特性：可读可写，断电之后数据全部丢失，是CPU与其它所有设备交换数据的桥梁。
+ADB故障解决方案
+------------------------------
+1. 找到android sdk位置，通过eclipse的Window菜单的Preferences选项，打开eclipse的设置对话框，左侧选择Android分类，右侧的SDK Location即为android sdk的位置
+2. 打开Windows系统的CMD窗口（通过运行cmd打开）
+3. 【以下操作都在CMD窗口中进行】打开android sdk的位置，例如输入d:回车，然后输入cd android回车，指令不区分大小写
+4. 打开platform-tools文件夹
+5. 输入adb devices查看已经连接的设备列表，正常连接的设备的状态应该是device或者online，如果显示为offline则需要重新启动对应的模拟器，如果已经启动了模拟器，却在列表中没有现实，则应该先重启adb，重启adb可以通过依次执行adb kill-server和adb start-server来实现，如果看到started successfully字样，则表示adb已经成功启动并正常运行，然后再通过adb devices检查设备的状况。
+------------------------------
+由于adb默认需要开启5037端口，如果其它程序占用了5037，则导致adb无法正常启动（即adb start-server后看不到started successfully字样），则需要先把占用5037端口的进程强制终止，然后再adb start-server
+1. 在CMD窗口中，输入netstat -ano可以查看端口的使用情况，并记下占用5037端口的进程ID（列表中每行最后的数字，例如2736）
+2. 打开Windows的任务管理器，点击“查看”菜单的“选择列”，勾选中“PID”并确认
+3. 找到PID为之前查看到的进程ID（例如2736）的进程，并结束进程
+4. 重新启动adb服务，即adb start-server
+提问
+---------------------------------------
+1. 请简述以下名词的概念：类、对象、属性、方法
+类：类似于生活中的“类别”，是对事物抽象的描述。
+对象：是类具体的存在。
+属性：绝大部分在生活中是使用“名词”来描述的，可以使用值量化的
+方法：在生活中表现为“动词”的，是由一系列的行为构成的，是对行为模式的描述
+public class Person {
+	String name;
+	int height;
+	float weight;
+	int gender;
+
+	void run() {}
+	void eat() {}
+	void sleep() {}
+}
+
+2. 请简述内部类的种类和特性
+1) 成员内部类：类的声明与外部类的其它成员(属性、方法……)在外部类的结构上是同等级别的。例如：
+public class OutterClass {
+	private int i;
+	public void test() {
+		InnerClass ic = new InnerClass();
+	}
+	private class InnerClass {
+	}
+}
+由于成员内部类是外部类的一部分，所以，在没有创建出外部类的对象之前，不可以创建内部类的对象。
+由于成员内部类是外部类的“成员”，所以，可以使用任何访问权限修饰符进行修饰。
+2) 静态(成员)内部类：使用了static进行修饰的成员内部类。
+public class OutterClass {
+	private int i;
+	public void test() {}
+	private static class InnerClass {
+	}
+}
+由于静态成员可以直接加载到内存，所以，可以在不创建外部类的对象时，直接创建静态内部类的对象。
+由于静态内部类使用了static修饰符，则在静态内部类中，无法直接访问外部类的非静态成员。
+3) 局部内部类：在方法中编写的内部类。例如：
+public class OutterClass {
+	public void test() {
+		int i = 100;
+		class InnerClass {
+			public int x;
+			public void run() {}
+		}
+	}
+}
+局部内部类不可以使用任何修饰符(public、private、static……)，因为这些修饰符是用于修饰类的成员的。
+由于局部内部类是声明在方法中的，而方法中的代码区分先后顺序，所以，使用局部内部类，必须在声明局部内部类之后，且，该局部内部类只能作用于所在的方法。
+局部内部类不可以直接访问局部变量，如果一定要访问该量，需要将变量修饰为final，或者提升为全局变量。
+4) 匿名内部类：直接new出已知的类的子类对象，或者接口的抽象类对象，例如：
+public class MainActivity extends Activity {
+	private View.OnClickListener listener = new View.OnClickListener {
+		public void onClick(View view) {
+		}
+	};
+
+	protected void onCreate(Bundle bundle) {
+		new View.OnClickListener() {
+			public void onClick(View view) {
+			}
+		};
+	}
+}
+由于匿名内部类是直接创建出对象的，如果是直接在方法中创建对象，则该匿名内部类符合局部内部类的特征，例如不可以直接访问局部变量等等；
+
+内部类可以访问外部类的所有成员，无论这些成员是使用什么样的权限修饰的。
+
+
+实现监听的方法
+---------------------------------------
+1) 在layout中为按钮配置android:onClick属性，例如android:onClick="doLogin"，然后，在Activity中，添加同名方法，例如public void doLogin(View view)，该方法除了名称需要与layout中配置的属性值相同以外，其它部分不允许随意修改。该方式仅仅适用于onClick事件；
+2) 使用内部类实现监听器接口，使用任何一种内部类的语法都可以实现相同的效果；
+3) 使用当前类(例如MainActivity)实现接口，配置监听器时直接使用this表示监听器对象，例如：
+public class MainActivity extends Activity implements View.OnClickListener {
+	protected void onCreate(Bundle bundle) {
+		// .... ....
+		btnLogin.setOnClickListener(this);
+	}
+
+	@Override
+	public void onClick(View view) {
+
+	}
+}
+
+
+Theme(主题)
+---------------------------------------
+Theme是样式的综合，选择不同的主题，将导致界面显示效果不同，主要表现为：是否全屏(FullScreen)、是否包含标题栏(TitleBar/ActionBar)、背景颜色、控件外观。
+在AndroidManifest.xml文件中，可以为<application>节点配置android:theme属性，以确定当前应用程序使用的主题。
+在AndroidManifest.xml文件中，也可以为<activity>节点配置android:theme属性，以确定该Activity显示的主题，默认各<activity>节点并没有配置该属性，则表示使用<application>配置的属性值。
+提问
+----------------------------------------
+【第一题】请列举Java中的运算符，并简述运算符的优先级
+运算符：算术运算符、关系运算符、逻辑运算符、赋值运算符、三元运算符
+优先级：
+1) 括号最优先
+2) 一元运算符很优先(!)
+3) 算术运算符
+4) ... ...
+5) 赋值运算符很不优先
+
+【第二题】请简述逻辑与 & 与 && 的区别
+在逻辑与的运算中，&(and)表示非短路的逻辑与，&&表示短路的逻辑与。
+a = 10;
+b = 20;
+++a > 100 & ++b > 100  ---> a=11, b=21
+++a > 100 && ++b > 100 --> a=11, b=20
+
+【第三题】请简述赋值符号(=)的作用
+赋值符号的作用是将赋值符号右侧的值赋予给左侧的量。
+
+
+ImageView
+----------------------------------------
+ImageView是用于显示图片、图形(shape)的控件，显示的内容可以是drawable系列文件夹下的图片、图形。
+核心属性：
+android:src 【必要】表示显示的图片来源，取值应该为 @drawable/???? 或者 @android:drawable/????
+android:scaleType 表示图片的缩放模式，仅当图片尺寸与ImageView尺寸不吻合时有效
+android:contentDescription 表示图片描述，取值参考TextView的android:text属性
+
+
+ImageButton
+----------------------------------------
+使用图片表现外观的按钮，使用方式参考ImageView
+
+
+关于drawable系列文件夹
+----------------------------------------
+在创建的Android应用程序中，默认存在多个drawable-???dpi文件夹，这些文件夹的作用是实现图片资源的自适应，当应用程序运行在不同显示密度的设备上时，会自动的优先从某个drawable-???dpi文件夹在获取图片资源进行显示。
+以ImageView的宽高均50dp为例，显示密度的具体表现：
+density 160 : 1dp -> 1px (在drawable-ldpi存放50px * 50px的图片)
+density 240 : 1dp -> 1.5px (在drawable-mdpi存放75px * 75px的图片)
+density 320 : 1dp -> 2px (在drawable-hdpi存放100px * 100px的图片)
+在不同的drawable文件夹下，如果表示同一张图片，则各文件的文件名必须保持一致，例如：
+drawable-ldpi\ic_launcher.png
+drawable-mdpi\ic_launcher.png
+drawable-hdpi\ic_launcher.png
+Ps：在最新的ADT中，推荐使用mipmap系列文件夹取代drawable系列文件夹。
+
+
+CheckBox(复选框)
+----------------------------------------
+CheckBox(复选框)是提供用于在固定的选项中，选择若干项的控件。
+核心属性：
+android:text 在CheckBox上显示的文本，取值参考TextView的android:text属性
+android:checked 表示CheckBox默认是否选中，取值为true或者false
+核心方法：
+void setText(CharSequence text) -> 设置在CheckBox上显示的文本
+CharSequence getText() -> 获取在CheckBox上显示的文本
+boolean isChecked() -> 获取CheckBox的选中状态，返回值为boolean值
+void setChecked(boolean checked) -> 设置CheckBox的选中状态
+主要监听器：
+OnCheckedChangeListener 监听CheckBox的选中状态
+
+
+RadioGroup与RadioButton(单选按钮)
+----------------------------------------
+RadioButton是单选按钮，即若干个单选按钮中只能选择其中的某一个选项，如果需要若干个单选按钮实现互斥效果，则这些单选按钮必须是同一个RadioGroup的子级控件。
+RadioGroup的本质是LinearLayout，在设计时，需要为RadioGroup添加android:orientation属性。
+RadioButton的使用与CheckBox基本相同。
+为了确保用户在使用时，一定选中了若干个RadioButton中的某一个，应该在设计界面时通过android:checked属性默认选中其中一个。
+RadioButton的常用属性：参考CheckBox
+RadioButton的常用方法：参考CheckBox
+
+
+仿团购APP的底部菜单
+----------------------------------------
+1. 添加<RadioGroup>，并配置android:layout_alignParentBottom属性和android:orientation属性
+2. 在<RadioGroup>节点下添加4个表示菜单项的<RadioButton>
+3. 为每个菜单项添加android:id、android:layout_weight、android:gravity、android:button、android:text属性
+4. 在drawable / drawable-nodpi文件夹下创建每个按钮的图片对应的selector，并配置给每个菜单项的android:drawableTop属性
+5. 为每个菜单项添加android:drawablePadding属性，以确定图片和文字之间的间隔距离
+6. 在drawable / drawable-nodpi文件夹下创建文字颜色的selector，并配置给每个菜单项的android:textColor属性
+
+
+selector(背景选择器)
+----------------------------------------
+selector用于在不同的状态下应用不同的drawable资源，可以用于设置显示图片或者背景等等。
+开发流程：
+1) 在res下创建drawable或者drawable-nodpi文件夹，用于存放selector的XML文件
+2) 在新创建的文件夹下，创建新的XML文件，根级节点(Root Element)选择selector
+3) 在新创建的XML文件中，添加<item>节点，并配置状态，例如state_checked=true，同时配置android:drawable属性，根据需要在不同状态下显示不同图片，配置若干个<item>节点
+【注意】没有配置状态的<item>节点必须放置在最后！
+提问
+-----------------------------------------
+1. 请简述你对重载(Overload)的理解。
+重载是在同一个类中，允许存在若干个同名方法的机制。
+重载的多个方法必须有不相同的参数列表，表现为：参数的数据类型、数量、顺序不同。
+判断是否允许重载，无视返回值类型。
+构造方法也是方法，所以，构造方法也可以重载。
+
+2. 请简述你对重写(Override)的理解。
+重写是在类与类之间实现继承关系以后，在子类中编写父类中已经声明的方法。
+当子类重写在父类中已经声明的方法时，不可以使用比父类声明时使用的更严格的访问权限。例如父类方法使用的权限是protected，则子类重写时可以继续使用protected，也可以使用public，但不可以使用private。
+
+
+调整默认显示的界面
+-----------------------------------------
+在AndroidManifest.xml文件的<application>节点下，如果某<activity>节点下存在
+<intent-filter>
+	<action ... ... MAIN />
+	<category ... ... LAUNCHER />
+</intent-filter>
+则表示该<activity>的android:name属性对应的Activity类是默认显示的Activity。
+
+
+ListView(列表视图控件)
+-----------------------------------------
+ListView用于显示若干条垂直方向排列的数据，例如手机联系人、QQ聊天列表、微信朋友圈、微博列表……
+
+
+开发ListView的4个基本要素
+-----------------------------------------
+1) ListView控件：容器、索取者
+2) 数据源，通常是List集合：数据的承载
+3) 模板(ArrayAdapter使用到的R.layout.xxx)：ListView的每项数据显示的外观
+4) Adapter(适配器)：ListView每项数据的提供者，组装数据、模板的组装者
+
+
+开发ListView的流程
+-----------------------------------------
+1) 在activity_main.xml中添加ListView控件，至少配置id、layout_width、layout_height属性，除此以外，ListView没有必要属性
+2) 在MainActivity.java中，创建数据源List<?>，并在其中添加各项数据（Ps：在使用ArrayAdapter时，数据的集合都应该是List<String>类型的）
+3) 在res\layout下，创建新的XML文件，根节点直接选择TextView
+4) 在MainActivity.java中，声明并创建ArrayAdapter<String>，构造方法中应用R.layout.xxxx（第3步骤的文件）和数据源
+5) 初始化ListView控件的对象，调用ListView的setAdapter()方法，为其配置ArrayAdapter即可
+
+
+关于ArrayAdapter
+-----------------------------------------
+使用ListView+ArrayAdapter的组合，只能实现ListView中的每项仅仅显示1种数据
+
+
+关于ListView的监听器
+-----------------------------------------
+【常用】OnItemClickListener
+抽象方法：onItemClick(AdapterView<?> parent, View view, int position, long id)
+参数说明：
+AdapterView<?> parent：表示点了哪个ListView触发当前监听器，因为同一个界面上允许存在若干个ListView，通常根据parent.getId()并使用switch语法进行区分判断
+View view：表示点了哪个Item，即参数就是对应的整个Item，如果需要获取该Item内的内容，可以通过view.findViewById()找到Item中的某个控件
+int position：表示点击的Item在ListView中的位置，该值是从0开始顺序编号的，并且，该值可以对应数据源(List集合)中数据的位置
+long id：(无视)
+【通知】本周六正常上课。
+
+提问
+-----------------------------------
+1. 请简述Set集合的特性与常用方法。
+Set是Collection的子级接口，Set是散列的，Set没有索引，Set中的各个元素之间不允许重复。
+add(E element)
+remove(E element)
+contains(E elements)
+addAll(Collection c)
+removeAll(Collection c)
+iterator()
+
+2. 如何遍历Set
+方法1：使用iterator
+Set<String> strings = new HashSet<String>();
+Iterator<String> it = strings.iterator();
+String str = null;
+while(it.hasNext()) {
+	str = it.next();
+	System.out.println(str);
+}
+方法2：foreach(增强for循环)
+Set<String> strings = new HashSet<String>();
+for(String str : strings) {
+	System.out.println(str);
+}
+
+3. 如何判断Set中的元素是否重复
+对象之间使用equals()对比的结果为true，且hashCode()方法的返回值相同，则在Set中被视为相同的对象。
+
+
+在ListView中显示分类字母标题
+-----------------------------------
+【步骤】
+1. 将ListView的数据源进行排序
+2. 修改模板，添加显示分类字母标题
+3. 在Adapter中，设置显示每个列表项的分类字母
+4. 在Adapter中，判断每个列表项是否有必要显示分类字母
+【实现】
+1. 排序：使用Collections.sort()方法可以对List集合自动排序，但是，List集合中的数据类型必须实现Comparable接口
+2. 显示或者隐藏：任何View对象都可以通过setVisibility()方法设置可见性，取值为View.VISIBLE时正常可见，取值为View.GONE时完全不可见，取值为View.INVISIBLE时控件内容不可见。
+
+
+GridView(网格视图控件)
+-----------------------------------
+GridView通常应用于“相册”、“应用程序列表”……
+GridView与ListView相同，都是AdapterView的子类，所以，开发流程相同，常见监听器相同。
+【GridView的特有属性】
+android:numColumns -> 列的数量，即每行(横排)显示多少个
+android:columnWidth -> 每列的宽度
+android:horizontalSpacing -> 水平间距
+android:verticalSpacing -> 垂直间距
+android:stretchMode -> 拉伸模式，即当控件的宽度大于以上属性设置后应该占据的宽度时，将间距拉伸或者将列的宽度拉伸
+【GridView的Bug】
+GridView应该明确的设置高度，如果高度设置为wrap_content，当动态的改变数据源或者GridView高度时，将不会发生变化。
+解决方案：
+1) 使用固定的高度值
+2) 自定义类继承GridView，重写控件高度的测量方法（详情请BAIDU相关资料）
+提问
+-----------------------------------
+1. 请简述Map集合的特性
+Map集合不是Collection接口的子级接口。Map集合的特性是使用Key、Value的键值对形式存储数据，其中Key类似于List集合中的索引，只不过该索引的数据类型可以是任何类型，且每个Key在同一个Map集合中必须是唯一(请参考Set集合如何判断数据是唯一的)的。
+
+List<String> strings = new ArrayList<>();
+strings.add("str1"); // index -> 0
+strings.add("str2"); // index -> 1
+strings.remove(1); // "str2"被移除
+strings.set(0, "hello"); // "str1"被修改为"hello"
+strings.get(0) // 被修改为"hello"的字符串被取出
+
+Map<Object, Object> params = new HashMap<>();
+params.put(0, "str1");
+params.put(1, "str2");
+params.put(0, "hello"); // "str1"被修改为"hello"
+
+2. HashMap与TreeMap的区别
+HashMap是散列的Map，表现为Key是散列的。
+TreeMap是自动排序的Map，表现为Key会自动排序，且要求Key的数据类型实现Comparable接口。
+
+3. 如何遍历Map
+Map<Object, Object> map = new HashMap<>();
+map.put("name", "Jack");
+map.put("from", "Beijing");
+map.put("gender", "male");
+map.put("age", "22");
+// 首先获取Map中所有的Key
+Set<Object> keys = map.keySet();
+// 遍历所有的Key的Set集合
+for(Object key : keys) {
+	// 遍历过程中，根据每次遍历到的key获取value
+	Object value = map.get(key);
+}
+
+
+重构
+-----------------------------------
+重构的目标是调整现有的代码，使得代码具有更好的可阅读行和可维护性。
+
+
+Activity类的定位
+-----------------------------------
+Activity是处理UI相关的类，用于完成界面的初始化、控件的显示、用户操作的响应等等。
+UI：User Interface
+
+
+向模拟器中添加歌曲
+-----------------------------------
+打开DDMS面板，在Devices中单击模拟器，然后在File Explorer面板中，找到sdcard的实际路径，并展开，选中Musics文件夹，然后点击面板右上角的图标向模拟器中添加歌曲文件。
+
+
+Linux文件系统中的权限
+-----------------------------------
+Linux文件系统中的权限是使用10个字符进行标识的，例如：drwxr-xr-w
+其中，第1位是类型标识，如果是d，表示文件夹，如果是-，表示文件，如果l表示链接(类似于Windows中的快捷方式)
+从第2位开始，每3位表示一种用户的操作权限，第2-4位表示文件的所有者(Owner)的操作权限，第5-7位表示Owner的同组用户的操作权限，第8-10位表示其它用户(与Owner没有关系)的操作权限。权限字符中，均使用rwx表示，r表示read，w表示write，x表示execute，-表示无此对应的权限。
+默认即创建的root用户不受任何权限的约束。
+
+
+MediaPlayer的常用方法
+-----------------------------------
+void reset()：重置
+void setDataSource(String)：设置歌曲的数据来源，参数是歌曲的完整路径
+void prepare()：缓冲，将歌曲的数据加载到内存
+void start()：开始播放
+void pause()：暂停
+int getCurrentPosition：获取当前播放到的位置，返回值是以毫秒为单位的数值
+void seekTo(int)：快进到指定的位置，参数是以毫秒为单位的数值
+boolean isPlaying()：判断是否正在播放
+void release()：释放资源
+
+
+ADB故障解决方案
+-----------------------------------
+ADB是Android Debug Bridge，用于连接PC端的手机管理软件和Android设备
+排除故障流程：
+1) 打开eclipse的Window菜单的Preferences选项，查看eclipse设置
+2) 在eclipse设置中，点击左侧的Android分类，确定右侧的SDK Location
+3) 在Windows系统中，打开“任务管理器”，找到adb.exe进程，强制结束该进程
+4) 在Windows系统中，按下Win+R，打开“运行”对话框，输入cmd并回车，打开命令提示符窗口
+5) 在命令提示符窗口中，进入SDK的目录(参见第2步的路径)，并切换到该文件夹下的platform-tools文件夹中
+6) 依次输入adb kill-server和adb start-server，如果看到successfully字样，则表示adb已经正常工作
+7) 输入adb devices查看设备，如果没有设备，则需要重新开启模拟器（无论当前是否存在模拟器窗口），如果存在设备，先观察设备的状态，如果状态是online或者device，则设备正常，如果是offline，则设备不正常，需要重启设备，当查看到设备且设备正常时，如果eclipse检测不到设备，则需要重启eclipse
+
+
+命令提示符窗口指令
+-----------------------------------
+d: -> 打开d盘
+cd software -> 打开software文件夹，cd表示change directory
+cd\ -> 回到当前盘的根目录
+
+
+Environment的常用方法
+-----------------------------------
+String getExternalStorageState()：获取sdcard的状态
+File getExternalStorageDirectory()：获取sdcard的根路径的File对象
+File getExternalStoragePublicDirectory(String)：获取sdcard下的某个文件夹的File对象
+
+
+权限
+-----------------------------------
+在Android中，涉及到敏感操作（例如：产生费用的、涉及隐私的……），都需要在AndroidManifest.xml中显式的声明（申请）权限。
+
+提问
+-------------------------------
+1) 请简述多态的概念
+多态是综合了继承、重写、向上转型等机制的一种编程应用方式，具体的表现为：当需要(声明)某个父类的对象时，可以使用(赋值)子类的对象，并且会执行子类对象中重写方法的效果。
+public class Animal {
+	public void sleep() {
+	}
+}
+public class Cat extends Animal {
+	@Override
+	public void sleep() {
+	}
+
+	public void catchMouse() {
+	}
+}
+public class Test {
+	public static void main(String[] args) {
+		Animal a = new Cat();
+		a.sleep();
+		// a.catchMouse();
+	}
+}
+在学术上的定义为：某个对象在编译期和运行期表现为不同的形态(数据类型)。
+多态可以应用于父子级的类的继承，也可以应用于类与接口的实现关系。
+例如：List data = new ArrayList();
+
+
+线程(Thread)
+-------------------------------
+进程是线程的综合体，每个正在运行的进程中都至少包含1个线程。
+如果存在多个线程，则这些线程会轮流获取CPU资源完成运算，每次获取CPU资源的时长是不可控的，由于线程之间切换工作的频率非常高，间隔时间非常短，所以表现为多个线程是“同时”运行。
+【开发流程-1】
+1. 自定义类，继承Thread类
+2. 重写public void run()方法，在该方法中编写具体执行的任务
+3. 在需要开启线程时，创建自定义的线程类的对象，然后调用start()方法开启线程
+【开发流程-2】
+1. 自定义类，实现Runnable接口，重写public void run()方法，在该方法中编写具体执行的任务
+2. 在需要开启线程时，先创建自定义的Runnable接口实现类的对象，然后创建Thread类的对象，并且使用Runnable对象作为Thread构造方法的参数，最后，调用Thread类对象的start()方法开启线程
+【两种开发流程的对比】
+使用继承Thread类的方式，代码简单，但是可能受到Java单继承的约束，即该线程类不可以再继承其它类；
+使用实现Runnable接口的方法代码略复杂，但是没有任何约束；
+【线程控制】
+static void sleep(int)：线程休眠，参数是以毫秒为单位的数值，在线程休眠期间，该线程处于暂停工作状态，关于休眠的线程，调用sleep()方法所在的线程会休眠，而无视该方法的调用者。
+
+
+Andriod中的ANR
+-------------------------------
+ANR：Application Not Responding，应用程序无响应
+在Android系统中，Activity的任务执行时间不得5s，否则就会导致ANR。
+
+
+Android UI线程
+-------------------------------
+在Android系统中，只有创建View对象的线程，可以操作View对象，而创建View都是默认在主线程中的，即表现为：只有主线程(UI线程)可以操作各个控件，而子线程不允许操作控件(不允许更新UI)。
+由于主线程默认创建控件，实现界面的显示，所以，在Android系统中的主线程也被称之为UI线程。
+提问
+------------------------------------
+1. 请简述抽象的概念
+当某个类需要约定一个方法，却无法具体的实现该方法时，可以将方法声明为抽象的，当方法是抽象的，则要求类本身也是抽象的，因为只有抽象类中才可以有抽象方法。
+抽象方法没有方法体。
+抽象类不可以直接创建对象。
+当某个类继承了抽象类后，必须重写抽象类中定义的抽象方法，或者，该子类也是抽象的。
+(抽象类的作用就是用于被继承的)
+问：抽象类中可以有普通的方法吗？ YES
+问：抽象类中可以没有抽象方法吗？ YES
+问：当父类不是抽象类，子类可以是抽象的吗？ YES
+public abstract class Animal {
+	public abstract void run();
+}
+
+public abstract class Cat extends Animal {
+	public abstract void run();
+}
+
+2. 请简述接口的概念
+接口是使用interface作为关键字声明的，接口中所有的成员都是public的，所有的方法都是abstract的，所有的属性都是static final的。
+public interface USB {
+	public abstract void read();
+	void write();
+}
+类与接口之间是实现与被实现的关系，使用implements关键字，例如public class UsbMp3 implements USB { ... }，该类就是接口的实现类。
+某个类可以同时实现若干个接口，各接口之间使用逗号(,)进行分隔即可，当实现若干个接口后，则该类需要重写所有接口中的抽象方法，除非该类也是抽象的……
+接口与接口之间可以存在继承关系，使用extends关键字，且子级接口可以同时继承若干个父级接口，当某个类实现了子级接口时，需要重写该接口的继承链上所有的抽象方法，除非该类也是抽象的……
+
+
+ProgressBar
+------------------------------------
+ProgressBar是显示进度的控件
+【核心属性】
+style -> 决定ProgressBar的显示外观，只有属性值中包含Horizontal字样的才是水平的进度条，默认的显示效果是转动的圆圈
+android:max -> 表示进度的最大值
+android:progress -> 表示当前的进度值
+【常用方法】
+void setProgress(int progress) -> 设置当前进度
+int getProgress() -> 获取当前进度值
+
+
+Activity
+------------------------------------
+Activity负责界面的初始化、显示、用户操作的响应等等。
+Activity是Android系统的核心组件之一，核心组件的特点有：
+1) 必须继承自指定的类，例如继承Activity
+2) 必须注册，例如在AndroidManifest.xml的<application>下添加<activity>节点进行注册
+3) 由系统进行维护，开发者不需要创建组件的对象，也不需要关心组件的销毁
+
+
+Activity的生命周期
+------------------------------------
+学习生命周期的意义在于：把代码写在正确的位置。
+onCreate() -> 当创建的时候
+onRestart() -> 当重新开始的时候
+onStart() -> 当开始的时候
+onResume() -> 当继续的时候
+onPause() -> 当暂停的时候
+onStop() -> 当停止的时候
+onDestory() -> 当销毁的时候
+【创建Activity】
+onCreate() -> onStart() -> onResume()
+【置为后台】
+onPause() -> onStop()
+【置为后台之后，再次回到前台】
+onRestart() -> onStart() -> onResume()
+【按下BACK键】
+onPause() -> onStop() -> onDestory()
+
+
+创建新的Activity
+------------------------------------
+1. 自定义类，继承自android.app.Activity
+2. 打开AndroidManifest.xml文件，在<application>下添加新的<activity>节点，并为该节点配置android:name属性，属性值为Activity类的包名和类名，其中，包名中与项目的package相同的部分允许省略
+3. (非必要)在自定义的Activity类中，重写onCreate()方法，并调用setContentView()设置需要显示的内容。
+
+
+激活新的Activity
+------------------------------------
+Intent intent = new Intent(当前Activity.this, 被激活的Activity.class);
+startActivity();
+在默认情况下，startActivity()会创建新的被激活的Activity对象，即使被激活的Activity原本就存在，也会创建新的。
+
+
+销毁Activity
+------------------------------------
+1. 按下设备上的BACK键
+2. 在Activity类中调用finish()方法
+以上2中方式实现的效果是等效的
+
+
+Intent(意图)
+------------------------------------
+Intent在Android系统中作用有：
+1. 激活系统组件
+2. 在系统组件之间传递数据
+【核心属性】
+1. ComponentName：组件名称，即指定被激活的组件
+使用方式：
+Intent intent = new Intent();
+ComponentName componentName = new ComponentName(MainActivity.this, SecondActivity.class);
+intent.setComponent(componentName);
+startActivity(intent);
+等效于
+Intent intent = new Intent();
+intent.setClass(MainActivity.this, SecondActivity.class);
+startActivity(intent);
+等效于
+Intent intent = new Intent();
+intent.setClassName(MainActivity.this, "cn.tedu.activity_life.SecondActivity");
+startActivity(intent);
+等效于
+Intent intent = new Intent();
+intent.setClassName(getPackageName(), "cn.tedu.activity_life.SecondActivity");
+startActivity(intent);
+等效于
+Intent intent = new Intent(MainActivity.this, SecondActivity.class);
+startActivity(intent);
+2. Extras：附加数据，用于在组件之间传递，当使用Intent激活组件时，可以在Intent中封装数据，这些数据将可以在被激活的组件中获取得到
+常用方法：
+void putExtra(String name, String value);
+void putExtra(String name, int value);
+String getStringExtra(String name);
+int getIntExtra(String name, int defaultValue);
+
+
+练习：
+设计MainActivity，添加输入以下内容的控件：用户名、密码、确认密码、性别、爱好(不得少于3种)，提交注册。
+当点击提交时，跳转到SecondActivity，并且在SecondActivity中显示注册信息。
+提问
+------------------------------------------
+1) 请简述List集合的特点与常用方法
+List集合是序列的，在List中的每个元素都有“索引(index)”，索引是从0开始顺序编号的。
+List的常用方法：
+add(E element)
+remove(int index) / remove(E element)
+set(int index, E element)
+get(int index)
+size()
+iterator()
+addAll(Collection c)
+
+2) 已知List接口的实现类有ArrayList和LinkedList，请简述这2种List的实现类的区别。
+ArrayList 数组，增加、删除效率低，查询效率高。
+LinkedList 链表，增加、删除效率高，查询效率低。
+
+
+开发ListView的4个基本要素
+------------------------------------------
+1) ListView
+2) 数据源
+3) 模板
+4) Adapter
+
+
+关于各种Adapter
+------------------------------------------
+1) ArrayAdapter：只能在Item中显示1种数据
+2) SimpleAdapter： 只能显示固定的1个模板，以至于显示的每个Item的外观必须是一模一样的
+3) BaseAdapter：完全自由的定制的Adapter
+
+
+使用BaseAdapter
+------------------------------------------
+1) 创建ContactAdapter继承自BaseAdapter，并添加抽象方法
+2) 把getItem()和getItemId()方法置于最后，这2个方法暂时不用具体实现(不写代码)
+3) 声明List<Contact>属性，并添加同类型参数的构造方法，通过构造方法设置该属性的值
+4) 声明Context属性，并添加同类型参数的构造方法，通过构造方法设置该属性的值
+5) 声明LayoutInflater属性，在构造方法中，通过LayoutInflater.from(Context context)方法设置该属性的值
+6) 重写getCount()方法，返回值是List<Contact>的长度
+7) 重写getView()方法，先使用LayoutInflater将模板加载为程序中的对象(View view)，然后通过该对象获取模板中的控件(TextView tvName = (TextView)view.findViewById(R.id.xxxx);)，再根据getView()方法的第1个参数int position从List<Contact>中获取需要显示的数据，设置到控件中，最后，返回View对象
+
+
+关于DDMS
+------------------------------------------
+Devices：设备列表及各设备上的进程列表。
+File Explorer：文件浏览器，可以向设备中添加文件，或者将设备中的文件导出，在执行导入/导出之前，应该先在Devices面板中单击设备，然后再执行操作，如果操作的是真机，某些目录会受到访问权限的限制。
+Emulator Control：模拟控制，用于模拟向AVD拨打电话或者发送短信等。
+Console：控制台，在开发Android应用程序时，绝大部分不需要参考Console面板的任何提示。
+Logcat：日志。
+
+
+关于Logcat
+------------------------------------------
+日志的级别：
+1) Verbose：观察
+2) Debug：调试
+3) Info：信息
+4) Warn：警告
+5) Error：错误
+日志中的信息：
+Level：日志级别
+Time：日期与时间
+PID：进程ID
+TID：线程ID
+Application：项目的包名
+Tag：日志标签，是输出日志时自由制定的字符串
+Text：日志正文，通常输出有意义的字符串
+
+
+关于BaseAdapter的优化
+------------------------------------------
+在使用BaseAdapter时，通过模板加载布局对象之前，应该对getView()方法的第2个参数View convertView进行判断，如果为null，则加载布局，否则，不加载。
+因为ListView会自动重复使用convertView，当最顶部的Item滑出屏幕时，会将用于显示它的View对象作为底部新出现的Item的View对象，用于调用BaseAdapter的getView()方法。
+以上优化原则是基于Android自动重复使用View对象实现的。
+
+
+关于BaseAdapter的优化--使用ViewHolder
+------------------------------------------
+推荐在ContactAdapter中定义内部类ViewHolder，用于封装模板中的各个控件，在getView()中，如果convertView为null，则创建新的ViewHolder，为ViewHolder中的各个控件赋值，并调用convertView的setTag()方法将ViewHolder对象封装起来，如果convertView()不为null，则直接调用convertView的getTag()方法获取ViewHolder对象。
+通过以上代码，可以减少findViewById()的次数，以提升应用程序的性能。
+课程内容
+---------------------------------
+1. 全部的常用UI控件
+2. 系统的4个核心组件
+3. 线程
+4. 数据存储
+
+
+提问
+---------------------------------
+1. 请简述封装的概念
+封装是先“装”再“封”的过程，使用封装可以提高程序的健壮性，开发者的可控性，及项目的可扩展性。
+步骤1：装
+public class Music {
+	String title;
+	String path;
+	int duration;
+}
+步骤2：封
+public class Music {
+	private String title;
+	private String path;
+	private int duration;
+}
+步骤3：提供访问方式--写
+public class Music {
+	private String title;
+	private String path;
+	private int duration;
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+}
+步骤4：提供访问方式--读
+public class Music {
+	private String title;
+	private String path;
+	private int duration;
+
+	public void setTitle(String title) {
+		if(title == null || title.length < 2) {
+			title = "未知";
+		}
+		this.title = title;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+}
+类本身的封装：
+步骤1：把某个类“装”到某个包里
+步骤2：把类的访问权限修改为“默认”，则该类只能被同包的其它类访问，不是相同的包则无法访问到这个类
+步骤3：另开发一个工厂类，和被封装的类在同一个包中，并在工厂类中定义例如newInstance()方法返回封装类的对象
+
+
+Intent(意图)
+------------------------------------
+Intent在Android系统中作用有：
+1. 激活系统组件
+2. 在系统组件之间传递数据
+【6个核心属性】
+1. ComponentName：组件名称，即指定被激活的组件
+使用方式：
+Intent intent = new Intent();
+ComponentName componentName = new ComponentName(MainActivity.this, SecondActivity.class);
+intent.setComponent(componentName);
+startActivity(intent);
+等效于
+Intent intent = new Intent();
+intent.setClass(MainActivity.this, SecondActivity.class);
+startActivity(intent);
+等效于
+Intent intent = new Intent();
+intent.setClassName(MainActivity.this, "cn.tedu.activity_life.SecondActivity");
+startActivity(intent);
+等效于
+Intent intent = new Intent();
+intent.setClassName(getPackageName(), "cn.tedu.activity_life.SecondActivity");
+startActivity(intent);
+等效于
+Intent intent = new Intent(MainActivity.this, SecondActivity.class);
+startActivity(intent);
+2. Extras：附加数据，用于在组件之间传递，当使用Intent激活组件时，可以在Intent中封装数据，这些数据将可以在被激活的组件中获取得到
+常用方法：
+void putExtra(String name, String value);
+void putExtra(String name, int value);
+String getStringExtra(String name);
+int getIntExtra(String name, int defaultValue);
+3. Action：动作，用于激活其它应用程序中的、未知名称的组件。
+通过setAction(String)方法可以设置Data属性，也可以在Intent的构造方法中直接设置该属性，例如Intent intent = new Inten(Intent.ACTION_DIAL);
+仅当当前Intent对象没有显式的指定被激活的组件(直接或者间接指定了ComponentName)时，Action是有效的，否则，Action属性并不会被应用。
+4. Data：数据，在激活组件时必须用到的数据，该数据是Uri格式的，可以通过Uri的静态方法Uri.parse(String)将字符串转换为Uri格式的数据。
+通过intent.setData(Uri)方法可以设置Data属性。
+通常使用Data属性时，都伴随着Action属性。
+5. Category：分类，用于隐式激活组件时，匹配IntentFilter
+通过intent.addCategory()可以向Intent对象中添加Category属性，每个Intent对象都可以有多个Category属性
+6. Flag：标识，在激活组件时，指定一些特殊的意义
+
+
+显式激活组件与隐式激活组件
+------------------------------------
+显式激活组件：在Intent中直接或者间接的指定了ComponentName属性
+隐式激活组件：在Intent中指定Action或者相关属性
+用于显式激活组件的Intent，称之为显式的Intent，而隐式组件的Intent，就称之为隐式的Intent
+	
+	
+Intent与IntentFilter
+------------------------------------
+IntentFilter是意图过滤器，用于与Intent对象进行匹配，如果存在匹配关系，则放行，否则，拦截。
+每个Intent对象都默认有值为"android.intent.category.DEFAULT"的Category属性，所以，在配置每个IntentFilter时，都应该添加对应的<category />
+关于Intent与IntentFilter的过滤/匹配关系，可以简单的理解为“IntentFilter中的属性，相比Intent对象，只会更多，而丝毫不少”
+
+
+配置允许隐式激活的组件
+------------------------------------
+在AndroidManifest.xml文件中，对需要被隐式激活的组件添加<intent-filter>子级节点，并在该<intent-filter>下继续添加<action />和<category />子级节点，并为这2个子级节点配置android:name属性，其中，<action />节点中的值是自由定义的字符串，<category />中的值是android.intent.category.DEFAULT，完整代码例如：
+<activity android:name="cn.tedu.call_phone.SecondActivity" android:label="@string/app_name" >
+	<intent-filter>
+		<action android:name="intent_demo_second" />
+		<category android:name="android.intent.category.DEFAULT" />
+	</intent-filter>
+</activity>
+
+
+任务栈
+------------------------------------
+Android系统使用“任务栈”管理各个已经激活的Activity，用于记录下所有已经激活的Activity，以至于当某个前台退出时，能够明确接下来需要显示的Activity是哪一个，所以，任务栈也被称之为“回退栈”。
+任务栈具有典型“栈”结构特点，操作种类有：压栈和弹栈。
+每当有Activity压栈时，该Activity就会获得栈顶位置，从而在前台显示，而其它的Activity被压栈后，都会被置为后台。
+每当有Activity需要退出时，就会弹栈，则栈内所有的Activity都会向上弹起，原本某个被置为后台的Activity将获得栈顶位置，从而显示在前台，如果弹栈后，栈已经为空，则该任务全部结束，将回到桌面或者任务列表等原来的界面。
+
+
+Activity的launchMode(启动模式)
+------------------------------------
+Activity的启动模式决定了Activity的实例的数量、任务栈的处理。
+Activity的启动模式可以通过AndroidManifest.xml中的<activity>节点的android:launchMode属性进行配置。
+Activity的启动模式有：
+1. standard：【默认】标准模式，每次激活时，都会创建新的Activity实例
+2. singleTop：栈顶唯一，即当该Activity处于栈顶位置时，反复激活并不会创建新的实例，而不在栈顶位置时，每次创建都会产生新的实例
+3. singleTask：任务栈内唯一，即当任务栈中没有被激活的Activity的实例，则创建，并且压栈，获得栈顶位置，从而显示在前台，当任务栈中已经存在该被激活的Activity的实例，则不会创建新的实例，原本在栈中的实例上方的所有Activity将被强制出栈，而被激活的Activity获得栈顶位置，从而显示在前台
+4. singleInstance：实例唯一，当Activity的launchMode设置为singleInstance时，该Activity被激活后，会产生专属任务栈，且该任务栈中永远有且仅有1个Activity实例。
+Ps：当Activity的launchMode被配置为singleTask或singleInstance时，还会受到android:taskAffinity属性的影响。
+Ps：可以使用Intent对象调用setFlags(int)或者addFlags(int)设置启动参数，也会出现类似启动模式的特征，对任务栈产生影响。
+
+
+Activity的状态
+------------------------------------
+1. 运行态：处于前台，可见，可控
+2. 暂停态：局部可见，完全不可控，通常是被非全屏的Activity遮挡
+3. 停止态：处于后台，不可见，不可控
+4. 终止态：Activity已经被调用了onDestory()
+
+
+Linux的内存管理
+------------------------------------
+原则：保证始终存在一定剩余空间，在此基础之上，能不释放的内存就不会释放，而是将可能需要释放的应用程序缓存在内存中，以至于下次开启该应用程序时，可以少加载部分数据。如果内存空间不足，将自动清理缓存的数据。
+
+
+Android中进程的优先级
+------------------------------------
+在Android操作系统中，优先级高的进程“生命力”更强，反之，优先级低的，“生命力”更弱，更容易被系统清理。
+1. 前台进程：可见可控进程
+2. 可见进程：可见不可控进程
+3. 服务进程：（参见下文）
+4. 后台进程：没有可见、可控的Activity
+5. 空进程：应该退出，但是被系统缓存的进程
+
+
+Service(服务)
+------------------------------------
+【基础】Service是Android系统的核心组件之一。
+【特性】Service是单例的，即实例唯一。
+【定位】Service是没有界面的，适用于在后台默默的执行任务。
+【注意】尽管Service适用于在后台执行耗时操作，但是，Service仍然是运行在主线程的，所以，任何在Service中的耗时操作都必须开启子线程来完成。
+【激活】在Activity中调用startService(Intent)
+【销毁】在Activity中调用stopService(Intent)
+【生命周期】
+当激活时：如果实例不存在，则onCreate() -> onStartCommand()，如果实例已经存在，则只会onStartCommand()
+当销毁时：onDestory()
+提问
+---------------------------
+请简述String的特性
+String具有“不可变”性，即String的对象一旦被创建，则不可以被修改：因为String的本质是char[]，而数组的长度是不可变的。
+String类型数据有专门的常量池，在常量池中的字符串是唯一的。
+由于String的运算效率低(基于不可变性)，在高频率的字符串运算中推荐使用StringBuffer、StringBuilder
+String 常量池（专门用来放常量的，如果是变量就要放到堆内存了）
+String str1="hello"
+String str2="hello"
+String str3=new String("hello")
+String str4="he"+"llo"
+String str5="he"
+str5=str5+"llo"
+由于“hello”是常量，str1和str2是都是放在常量池中的，且常量池具有唯一性，所有str1是等于str2的
+而str3是在内存中开辟一个空间放“hello”的，不是在常量池中。所以和str1和str2是不同的。
+str4中"he"+"llo"都是常量，所以是放在常量池中的，在运算之前两者已经加起来等于“hello”
+所以和str1和str2是相同的，str5是变量+常量这样的结果是放在堆内存中。就和str1他们不相同了。
+Application
+-------------------------------
+Application也是Android系统的核心组件。
+Application在应用程序中有且仅有1个，当应用程序开始运行时，Application将开始运行，当应用程序的最后一个组件退出以后，Application将被销毁，所以，Application的生命周期非常长，可以用于提供应用程序级的“全局变量”。
+
+
+激活Service的2种方式
+-------------------------------
+1. 启动模式：startService()
+2. 绑定模式：bindService()
+
+
+绑定Service
+-------------------------------
+在Activity中，使用bindService()方法可以以绑定模式激活Service。
+绑定的Service，用于实现其它组件(例如Activity)与Service之间的组件间通信。
+Service中的onBind()必须返回非null的值，否则，在Activity中的ServiceConnection的onServiceConnected()方法不会被调用。
+当成功绑定后，在Service的onBind()方法的返回值，将在Activity的ServiceConnection的onServiceConnected()中被得到。
+【注意】当与Service绑定的组件(例如Activity)被销毁之前，需要取消绑定！
+【开发流程】
+1. 创建WorkService，继承android.app.Service
+2. 注册WorkService
+3. Activity：在需要绑定的时候，调用bindService()，参数1是Intent对象，参数2是ServiceConnection(创建过程参见以下步骤)，参数3是BIND_AUTO_CREATE
+4. Activity：创建InnerServiceConnection，实现ServiceConnection
+5. 创建接口类型IMusicPlayer，并定义抽象方法，这些方法是Activity需要调用的，并且是由Service具体实现
+6. Service：创建InnerBinder，继承Binder，并且实现接口类型，即实现IMusicPlayer
+7. Service：在onBind()方法中，返回InnerBinder的对象
+8. Activity：在InnerServiceConnection的onServiceConntected()方法中，参数IBinder service即为接口类型的对象，即IMusicPlayer对象
+
+
+绑定Service的生命周期
+-------------------------------
+绑定时：
+--> 当Service不存在时，onCreate()
+--> 当Service存在时，则不会执行onCreate()
+--> --> ServiceConnection已经绑定过，则没有效果
+--> --> ServiceConnection没有绑定过，则onBind()
+取消绑定时：
+onUnbind() -> onDestory()
+
+
+Android中进程的优先级
+------------------------------------
+在Android操作系统中，优先级高的进程“生命力”更强，反之，优先级低的，“生命力”更弱，更容易被系统清理。
+1. 前台进程：可见可控进程，有Service绑定到了可见可控进程的那些进程
+2. 可见进程：可见不可控进程，有Service绑定到了可见不可控进程的那些进程
+3. 服务进程：（参见下文）
+4. 后台进程：没有可见、可控的Activity
+5. 空进程：应该退出，但是被系统缓存的进程
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+

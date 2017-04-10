@@ -1,0 +1,2 @@
+INSTALL_FAILED_UPDATE_INCOMPATIBLE
+adb uninstall com.ubcoll

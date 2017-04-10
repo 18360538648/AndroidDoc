@@ -1,0 +1,15 @@
+startActivityForResult(Intent intent, int requestCode)是为了打开新的Activity，其中的requestCode是请求码，自己定义，标志由哪个事件触发新的Activity生成。
+
+startActivityForResult(new Intent(MainActivity.this, OtherActivity.class), 1);
+setResult，当新的Activity关闭时，给前一个Activity传回一个结果
+Intent intent = new Intent();
+//把返回数据存入Intent
+intent.putExtra("result", "My name is linjiqin");
+//设置返回数据
+ OtherActivity.this.setResult(RESULT_OK, intent);
+//关闭Activity
+OtherActivity.this.finish();
+
+onActivityResult(int requestCode, int resultCode, Intent data)
+获取从新的Activity传过来的resultCode（如上面的RESULT_OK）。并可以通过requestCode来判读是哪个事件触发的（如上面的1）
+通过data可以获取传过来的值String result = data.getExtras().getString("result");

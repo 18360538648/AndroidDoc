@@ -1,0 +1,17 @@
+在fragment中要用getActivity()
+在handle中：Activity用getApplicationContext(),fragment还是用getActivit()
+1，XActivity.this
+
+         Activity的实例
+         Activity的上下文，对话框必须要使用该上下文，对话框是Activity的一部分
+
+   2, getApplicationContext
+
+		Context的实例
+        土司或者布局都可以使用该上下文,
+        土司不属于Activity，关闭Activity 也不影响土司的显示
+        土司是Window的一部分
+
+   3, getContext
+
+        虚拟的上下文，主要用在单元测试中

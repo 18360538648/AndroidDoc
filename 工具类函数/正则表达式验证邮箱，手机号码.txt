@@ -1,0 +1,43 @@
+ /** 
+     * 验证邮箱格式"^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$"//email地址 
+     */ 
+    public static boolean regExpTest4(String str) { 
+        String regex = "^[\\w-]+(\\.[\\w-]+)*\\@([\\.\\w-]+)+$"; 
+        boolean flg = Pattern.matches(regex, str); 
+        System.out.println(flg); 
+        return flg; 
+    } 
+    /** 
+     * 验证电话号码 
+     */ 
+    public  static boolean regExpTest5(String str){ 
+       // "(d+-)?(d{4}-?d{7}|d{3}-?d{8}|^d{7,8})(-d+)?"     //电话号码 
+        //String regex = "\\d{3}-\\d{4}-\\d{7,8}-\\d{3}"; 
+        String regex = "(\\d+-)?(\\d{4}-\\d{7,8})(-\\d+)"; 
+        boolean flg = Pattern.matches(regex, str); 
+        System.out.println(flg); 
+        return flg; 
+    } 
+  /** 
+     * 正则验证方法一 
+     */ 
+    public static boolean regExpTest() { 
+        //验证标识符必须由字母、数字、下划线组成 
+        Pattern p = Pattern.compile("[a-z0-9A-Z_]+"); 
+        Matcher m = p.matcher("aasdad"); 
+        boolean flg = m.matches(); 
+        System.out.println(flg); 
+        return flg; 
+    } 
+    /** 
+     * 正则验证方法二 
+     */ 
+    public  static boolean regExpTest2(String str) { 
+        //匹配标识符必须由字母、数字、下划线组成，且开头和结尾不能有下划线 
+        //String regex = "(^[a-z0-9A-Z])[a-z0-9A-Z_]+([a-z0-9-A-Z])"; 
+        //匹配标识符必须由字母、数字、下划线组成，且开头和结尾不能有下划线,且中间的字符至少1个不能超过5个 
+        String regex = "(^[a-z0-9A-Z])[a-z0-9A-Z_]{1,5}([a-z0-9-A-Z])"; 
+        boolean flg = Pattern.matches(regex, str); 
+        System.out.println(flg); 
+        return flg; 
+    } 

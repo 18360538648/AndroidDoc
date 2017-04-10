@@ -1,0 +1,20 @@
+public static void main(String[] args)
+ {
+   //Data data=new Data();
+  String dateString = "20090915-17:20:12";
+  try {
+   Date date = new SimpleDateFormat("yyyyMMdd-HH:mm:ss").parse(dateString);
+   // 下面将字符串转换为日期格式后显示的格式是2009-09-15
+   System.out.println(DateFormat.getDateInstance().format(date));
+   // 如果想换一种别的格式，可以用下面的办法，得到任何的日期格式都可以
+   // 输出的结果为2009/09/15 17:20:12
+   System.out.println(new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(date));
+   // 输出的结果为2009-09-15 17:20:12
+   System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date));
+   // SimpleDateFormat sdf2 = new
+   // SimpleDateFormat("yyyy年MM月dd日");输出的结果为2009年09月15日 17:20:12
+   System.out.println(new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss").format(date));
+  } catch (Exception ex) {
+   System.out.println(ex.getMessage());
+  }
+ }

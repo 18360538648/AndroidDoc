@@ -1,0 +1,15 @@
+popwindow的使用
+//contentView为listview。
+popupWindow=new PopupWindow(lv, width, height);
+//使其获取焦点
+popupWindow.setFocusable(true);
+//点击popwidow外侧能取消
+popupWindow.setOutsideTouchable(true);
+
+//popwindow的显示位置
+popupWindow.showAsDropDown(etSpinner);
+在使用之前应该判读popwidow是否为空，当popwindow为空时，创建popwindow
+当要取ppwindow时也要判读popwindow是否为空
+if(popupWindow!=null){
+popupWindow.dismiss();
+}

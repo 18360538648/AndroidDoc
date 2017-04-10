@@ -1,0 +1,19 @@
+传输方：
+Bundle bundle=new Bundle();
+bundle.putSerializable("deviceInfEntity", deviceInfEntity);
+intent.putExtra("deviceInfEntity", bundle);
+接收方：
+Intent intent=getIntent();
+Bundle bundle=intent.getBundleExtra("deviceInfEntity");
+DeviceInfEntity deviceInfEntity=(DeviceInfEntity) bundle.getSerializable("deviceInfEntity");
+
+
+
+传输方：
+Bundle data=new Bundle();
+data.putSerializable("device", deviceInfEntity);
+msg.setData(data);
+接收方：
+Bundle data=	msg.getData();
+deviceInfEntity=(DeviceInfEntity) data.getSerializable("device");
+deviceInfEntityList.add(deviceInfEntity);
