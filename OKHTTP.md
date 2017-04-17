@@ -42,7 +42,7 @@ request.newCall(request).enqueue(new Callback() {
 ## 3. OKHTTP 监听进度
 
 相应的监听函数在okhttp工程中
-[github地址](https://github.com/18360538648/Android/tree/master/Demo/OKhttp/OkHttp)
+[github地址](https://github.com/18360538648/okhttpdemo)
 
 ```
 
@@ -87,6 +87,78 @@ ProgressHelper.addProgressResponseListener(clickOKHttpClient, new UIProgressList
 
 [扩展链接1](http://blog.csdn.net/qq_19431333/article/details/53141013)
 [扩展链接2](https://gold.xitu.io/entry/5769f978d342d300580f4328)
+
+
+## 4. OKHTTP 上传多个文件
+
+```
+MultipartBody.Builder mbody = new MultipartBody.Builder().setType(MultipartBody.FORM).addFormDataPart("type", "" + type).addFormDataPart("user_id", "" + userId).addFormDataPart("note", "" + note);
+        for (String fileName : photos) {
+
+            File mediaFile = new File(fileName);
+            Log.i("lsw", "mediaFile:" + mediaFile.getName());
+            mbody.addFormDataPart("file" + i, mediaFile.getName(), RequestBody.create(MediaType.parse("multipart/form-data"), mediaFile));
+            i++;
+        }
+        RequestBody requestBody = mbody.build();
+        Request request = new Request.Builder()
+                .url(urlAddress)
+                .post(requestBody)
+                .build();
+```
+
+## 5. OKHTTP支持https
+
+```
+private static OkHttpClient mOKHttpClient = new OkHttpClient.Builder()
+            .connectTimeout(15, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .sslSocketFactory(createSSLSocketFactory())
+            .hostnameVerifier(new HostnameVerifier() {
+                @Override
+                public boolean verify(String hostname, SSLSession session) {
+                    return true;
+                }
+            }).build();
+```
+
+```
+private static SSLSocketFactory createSSLSocketFactory() {
+        SSLSocketFactory ssfFactory = null;
+
+        try {
+            SSLContext sc = SSLContext.getInstance("TLS");
+            sc.init(null, new TrustManager[]{new TrustAllCerts()}, new SecureRandom());
+
+            ssfFactory = sc.getSocketFactory();
+        } catch (Exception e) {
+        }
+
+        return ssfFactory;
+    }
+```
+
+```
+public class TrustAllCerts implements X509TrustManager {
+    @Override
+    public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+
+    }
+
+    @Override
+    public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+
+    }
+
+    @Override
+    public X509Certificate[] getAcceptedIssuers() {
+        return new X509Certificate[0];
+    }
+}
+
+```
+
 
 
 

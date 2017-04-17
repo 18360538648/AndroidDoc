@@ -58,4 +58,12 @@ ActivityCompat.requestPermissions(activity, permissionsList.toArray(new String[p
 ```
 
 
+### 2.4 已赋予权限判断
+
+```
+ContextCompat.checkSelfPermission(context,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+```
+
+
 
