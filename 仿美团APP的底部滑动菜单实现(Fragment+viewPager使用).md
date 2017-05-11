@@ -271,6 +271,11 @@ public class MainActivity extends FragmentActivity {
 
 ```
 
+## viewPager使用
+
+* setOffscreenPageLimit 设置当前页面两边的预加载页面个数，默认值为1(即左边可以预加载一个页面，右边也可以加载一个页面)
+* 
+
 
 
 
