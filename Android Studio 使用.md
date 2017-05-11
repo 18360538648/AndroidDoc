@@ -114,3 +114,15 @@ ps: 从上面的文件结构以及内容可知，加入一个library工程有如
 ```
 compile project(':extras:ShimmerAndroid')
 ```
+
+## 2. 查看源码报异常
+
+在查看源代码时，会报如下错误
+
+```
+throw new RuntimeException("Stub!")
+```
+
+解决方法：
+
+etting->Preferences -> Appearance & Behavior -> System Settings -> Android SDK--->点击EditAndroid SDK location 然后点击下一步--->下一步-->完成
