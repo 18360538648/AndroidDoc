@@ -1,7 +1,0 @@
-# 在Activity上下文之外启动Activity需要给Intent设置FLAG_ACTIVITY_NEW_TASK标志
-
-当lancher启动一个应用的ActivityA时，系统会生成一个任务栈，ActivityA就会放在栈底，当ActivityA启动ActivityB时，ActivityB也会放在存放ActivityA的任务栈中。当不在Activity上下文的环境中启动一个Activity时，系统就会重新创建一个任务栈，存储新启动的Activity(这种情况有通过广播或者一个方法启动一个Activity时)
-
-```
-intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-```
