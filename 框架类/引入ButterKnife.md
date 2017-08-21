@@ -77,3 +77,14 @@ public void showToast(){
 
 
 [butterknife](http://jakewharton.github.io/butterknife/)
+
+
+```
+<CheckBox
+                android:id="@+id/cb_gv_class_item"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_centerInParent="true"
+                android:button="@null"
+                android:text="班级" />
+```
