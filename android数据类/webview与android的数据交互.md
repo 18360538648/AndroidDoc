@@ -30,6 +30,7 @@ webview.addJavascriptInterface(new MyObject(), "displayFormJs");
 
 ```
 webview.loadUrl("javascript:displayFormNative(' " + displaytext + " ')");
+webview.loadUrl("javascript:displayFormNative()");
 ```
 js中的代码
 

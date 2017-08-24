@@ -16,7 +16,7 @@
 ws.setJavaScriptEnabled(true);
 ws.setBuiltInZoomControls(false);// 显示缩放按钮
 ws.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);// 排版适应屏幕
-ws.setUseWideViewPort(false);// 可任意比例缩放
+ws.setUseWideViewPort(true);// 可任意比例缩放
 ```
 
 ## 3. WebViewClient和WebChromeClient
@@ -199,3 +199,16 @@ soundPool.play(soundID1, 1.0f, 1.0f, 100, 0, 1.0f);
         }
 ```
 
+tvAnswerJudge.setTextColor(Color.parseColor("#009a12"));
+
+tvAnswerJudge.setTextColor(Color.parseColor("#bd0000"));
+
+# 3.4 加载页面的时候出现如下错误
+
+```
+Cannot call determinedVisibility() - never saw a connection for the pid
+```
+
+```
+查看布局，是否为match_parent
+```
