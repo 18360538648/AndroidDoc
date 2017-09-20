@@ -114,3 +114,19 @@ ps: 从上面的文件结构以及内容可知，加入一个library工程有如
 ```
 compile project(':extras:ShimmerAndroid')
 ```
+
+## 1.5 加入so文件
+
+将so文件放入lib目录下面，在build.gradle加入如下代码,然后编译
+
+```
+android {
+    ...
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+    ...
+}
+```
