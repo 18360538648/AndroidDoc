@@ -5,8 +5,8 @@
 ```
 <activity android:name=".MainActivity" android:launchMode="standard" />
 ```
-
-## 1. Standard(默认)
+Standard(默认)
+## 1. standard
 
 默认启动模式，每次激活Activity时都会创建Activity，并放入任务栈中。
 

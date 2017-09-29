@@ -16,3 +16,16 @@
 4.onProgressUpdate(Progress... values)，在调用publishProgress(Progress... values)时，此方法被执行，直接将进度信息更新到UI组件上。
 
 5.onPostExecute(Result result)，当后台操作结束时，此方法将会被调用，计算结果将做为参数传递到此方法中，直接将结果显示到UI组件上。
+
+
+## 2.深入研究
+
+AsyncTask主要有两个部分。一通过Handler与主线程交互，二线程的管理调度。
+
+下面主要讲线程的管理调度。
+
+在同一个进程中的所有AsyncTask的实例是属于进程共享的，因此在同一个进程中AsyncTask控制着进程范围内的所有子类实例。
+在Android2.3以前，内部的线程池限制是5个，因此同时只能有5个线程同时运行。
+Android 3.0以后。
+* 通过execute()提交的任务会按先后顺序执行，一次只能运行一个
+* 新增executeOnExecutor(),里面的参数为Executors.newCachedThreadPool()可为无限制的线程数，参数为AsyncTask.THREAD_POOL_EXECUTOR，线程数为5，参数为AsyncTask.SERIAL_EXECUTOR，线程数为1，效果和execute()一样

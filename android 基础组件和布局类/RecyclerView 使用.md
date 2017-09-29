@@ -5,7 +5,7 @@
 ### 1.1 优点
 
 * RecyelerView封装了viewholder的回收和复用，是复用变得更加简单
-* RecyelerView高度解耦和灵活
+* RecyelerView高度解耦和灵活，
 * RecyelerView可以控制增删动画
 
 ### 1.1 缺点
