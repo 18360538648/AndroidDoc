@@ -1,8 +1,20 @@
-# Asyntask异步任务
+# AsynTask
 
-## Asyntask异步任务：public abstract class AsyncTask<Params, Progress, Result> {}
+## 1. AsynTask的概述
+Asyntask是Android提供的轻量级的异步任务类，用于处理一些耗时操作。
+
+## 2. AsynTask参数和重写函数
+
+### 2.1 AsynTask参数
+
+
+```
+public abstract class AsyncTask<Params, Progress, Result> {}
+```
 
 三种泛型类型分别代表“启动任务执行的输入参数”、“后台任务执行的进度”、“后台计算结果的类型”。在特定场合下，并不是所有类型都被使用，如果没有被使用，可以用Java.lang.Void类型代替，Progress用Integer，其他的参数需要以大写开头
+
+### 2.2 AsynTask重写函数
 
 一个异步任务的执行一般包括以下几个步骤：
 
@@ -18,7 +30,7 @@
 5.onPostExecute(Result result)，当后台操作结束时，此方法将会被调用，计算结果将做为参数传递到此方法中，直接将结果显示到UI组件上。
 
 
-## 2.深入研究
+## 3. AsynTask深入探究
 
 AsyncTask主要有两个部分。一通过Handler与主线程交互，二线程的管理调度。
 
@@ -26,6 +38,7 @@ AsyncTask主要有两个部分。一通过Handler与主线程交互，二线程�
 
 在同一个进程中的所有AsyncTask的实例是属于进程共享的，因此在同一个进程中AsyncTask控制着进程范围内的所有子类实例。
 在Android2.3以前，内部的线程池限制是5个，因此同时只能有5个线程同时运行。
-Android 3.0以后。
+Android 3.0以后。提供如下两个方法：
+
 * 通过execute()提交的任务会按先后顺序执行，一次只能运行一个
 * 新增executeOnExecutor(),里面的参数为Executors.newCachedThreadPool()可为无限制的线程数，参数为AsyncTask.THREAD_POOL_EXECUTOR，线程数为5，参数为AsyncTask.SERIAL_EXECUTOR，线程数为1，效果和execute()一样

@@ -90,7 +90,9 @@ int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
             }
         };
 ```
+
 将图片加入LruCache中
+
 ```
 // 将图片对象加入缓存空间中
     public void addBitmapToMemoryCache(String key, Bitmap bitmap) {

@@ -26,6 +26,6 @@ NDK开发具有以下优点：
 
 ## 二. 配置ndk开发环境
 
-右击项目
+右击项目 --> 选择Open Module Settings --> 点击下载Android NDK,等下完以后关闭Android Studio，重新打开(苦于没有找到Android Studio的刷新按钮)，n
 
 

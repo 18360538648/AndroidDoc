@@ -1,0 +1,74 @@
+HashMap深入探究
+
+[参考地址](http://www.cnblogs.com/ITtangtang/p/3948406.html)
+
+# 1. HashMap的概述
+
+HashMap是基于HashTable的Map接口的实现,允许使用null key 和 null value(这点与HashTable不同)，非线程安全的
+
+## 2. HashMap的数据结构
+
+HashMap的底层基于数组和链表实现，数据用于存储Entry对象，链表是为了解决Hash冲突。
+### 2.1 数组
+HashMap查找速度快，是由于通过key的hashcode来计算hash值，通过hash值来计算存储的位置。
+### 2.2 链表
+只要hashcode的值一样，hash值也一样，对应的存储位置一样，这样就会hash冲突。HashMap解决hash冲突的办法是链地址法
+
+## 3. HashMap的重要方法
+
+### 3.1 put方法
+
+```
+public V put(K key, V value) {
+     // 若“key为null”，则将该键值对添加到table[0]中。
+         if (key == null) 
+            return putForNullKey(value);
+     // 若“key不为null”，则计算该key的哈希值，然后将其添加到该哈希值对应的链表中。
+         int hash = hash(key.hashCode());
+     //搜索指定hash值在对应table中的索引
+         int i = indexFor(hash, table.length);
+     // 循环遍历Entry数组,若“该key”对应的键值对已经存在，则用新的value取代旧的value。然后退出！
+         for (Entry<K,V> e = table[i]; e != null; e = e.next) { 
+             Object k;
+              if (e.hash == hash && ((k = e.key) == key || key.equals(k))) { //如果key相同则覆盖并返回旧值
+                  V oldValue = e.value;
+                 e.value = value;
+                 e.recordAccess(this);
+                 return oldValue;
+              }
+         }
+     //修改次数+1
+         modCount++;
+     //将key-value添加到table[i]处
+     addEntry(hash, key, value, i);
+     return null;
+}
+
+private V putForNullKey(V value) {
+          for (Entry<K,V> e = table[0]; e != null; e = e.next) {
+              if (e.key == null) {   //如果有key为null的对象存在，则覆盖掉
+                  V oldValue = e.value;
+                  e.value = value;
+                  e.recordAccess(this);
+                  return oldValue;
+             }
+         }
+         modCount++;
+         addEntry(0, null, value, 0); //如果键为null的话，则hash值为0
+         return null;
+ }
+ 
+ //计算hash值的方法 通过键的hashCode来计算
+     static int hash(int h) {
+         // This function ensures that hashCodes that differ only by
+         // constant multiples at each bit position have a bounded
+         // number of collisions (approximately 8 at default load factor).
+         h ^= (h >>> 20) ^ (h >>> 12);
+         return h ^ (h >>> 7) ^ (h >>> 4);
+     }
+     static int indexFor(int h, int length) { //根据hash值和数组长度算出索引值
+         return h & (length-1);  //这里不能随便算取，用hash&(length-1)是有原因的，这样可以确保算出来的索引是在数组大小范围内，不会超出
+     }
+     
+```
+从中可以看出，如果Entry的值key的hashcode()一样，那么存储位置相同，如果遍历当前Entry链，key值有相同的，则覆盖原来的，key值不变，如果没有则新添建的Extry将与原有的Extry形成Extry链,且新添的entry位于Entry链头部

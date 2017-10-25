@@ -40,6 +40,10 @@ List<T> stringList = gson.fromJson(jsonArray, new TypeToken<List<T>>() {}.getTyp
 
 [你真的会用Gson吗](http://www.jianshu.com/p/e740196225a4)
 
+### 注意事项
+
+如果一个key值为空，Gson会自动将其赋值为null，这时要在用的时候多加一层判断
+
 
 
 ## 二. FastJson使用

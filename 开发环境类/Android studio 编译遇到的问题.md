@@ -33,3 +33,17 @@ Application com.steam.ecos is waiting for the debugger on port 8100
 
 解决方啊：
 Run-> Edit-Configurations->Miscellaneous Tab->uncheck 'skip installation if APK has not changed' 
+
+## 5. com.android.support:support-annotations 26.0.1
+
+在项目的build.gradle中加入以下的代码
+
+```
+allprojects {
+    repositories {
+        jcenter()
+        // 从geogle中maven下载资源
+        maven { url 'https://maven.google.com' }
+    }
+}
+```
