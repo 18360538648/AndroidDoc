@@ -1,0 +1,48 @@
+
+通过cat方式访问
+.bash_profile 文件
+```
+[[ -s "$HOME/.profile" ]] && source "$HOME/.profile" # Load the default .profile
+[[ -s "$HOME/.bashrc" ]] && source "$HOME/.bashrc"
+export PATH=$PATH:/Users/os/luosw/apache-tomcat-7.0.70/bin
+GRADLE_HOME=/Users/os/luosw/gradle-2.4
+export GRADLE_HOME
+export PATH=$PATH:$GRADLE_HOME/bin
+export NDK_ROOT=/Users/os/Downloads/android-ndk-r13b
+export ANDROID_SDK_ROOT=/Users/os/Downloads/android-sdk-macosx
+export COCOS_CONSOLE_ROOT=/Users/os/Downloads/cocos2d-x-3.13.1/tools/cocos2d-console/bin
+export PATH=$COCOS_CONSOLE_ROOT:$PATH
+
+# Add environment variable COCOS_TEMPLATES_ROOT for cocos2d-x
+export COCOS_TEMPLATES_ROOT=/Users/Users/os/Downloads/cocos2d-x-3.13.1/templates
+export PATH=$COCOS_TEMPLATES_ROOT:$PATH
+export ANT_ROOT=/Users/os/Downloads/apache-ant-1.9.7/bin  
+export PATH=$PATH:/Users/os/luosw/play-java
+```
+.bashrc 文件
+```
+export PATH=$PATH:/Users/os/luosw/play-java/Users/os  
+bash$ cat .bashrc
+export JAVA_HOME=$(/usr/libexec/java_home)
+
+# Android environment setup
+export ANDROID_HOME=$HOME/Downloads/android-sdk-macosx
+export PATH=$ANDROID_HOME/platform-tools:$ANDROID_HOME/tools:$PATH
+export ANDROID_SDK_ROOT=$HOME/Downloads/android-sdk-macosx
+export PATH=$ANDROID_SDK_ROOT/platform-tools:$ANDROID_SDK_ROOT/tools:$PATH
+export NDK_ROOT=/usr/local/Cellar/android-ndk-r10e
+
+alias ll='ls -alh'
+
+source `brew --prefix git`/etc/bash_completion.d/git-completion.bash
+source `brew --prefix git`/etc/bash_completion.d/git-prompt.sh
+
+GIT_PROMPT_ONLY_IN_REPO=1
+if [ -f "$(brew --prefix)/opt/bash-git-prompt/share/gitprompt.sh" ]; then
+    source "$(brew --prefix)/opt/bash-git-prompt/share/gitprompt.sh"
+fi
+
+# Show git branch in status line & RVM info
+PS1='\033[36m\]$PWD\033[37m\]$(__git_ps1 " (%s)") \[\033[00m\] \nbash$ '
+PROMPT_COMMAND='echo -ne "\033]0;${PWD/#$HOME/~}\007"'
+```
