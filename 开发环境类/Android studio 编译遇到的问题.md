@@ -22,7 +22,7 @@ throw new RuntimeException("Stub!")
 
 解决方法：
 
-File-setting->Preferences -> Appearance & Behavior -> System Settings -> Android SDK--->点击EditAndroid SDK location 然后点击下一步--->下一步-->完成
+Setting->Preferences -> Appearance & Behavior -> System Settings -> Android SDK--->点击EditAndroid SDK location 然后点击下一步--->下一步-->完成
 
 
 ## 4. 调试的时候出现如下问题
