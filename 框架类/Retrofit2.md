@@ -42,5 +42,8 @@
 |@Multipart|表示请求发送multipart数据，需要配合使用@Part|
 |@Streaming|表示响应用字节流的形式返回.如果没使用该注解,默认会把数据全部载入到内存中.该注解在在下载大文件的特别有用|
 
+## 2.具体使用
+见[demo](https://github.com/18360538648/retrofit2demo)
+
 
 
