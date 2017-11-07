@@ -16,3 +16,13 @@ Glide会比Picasso内存使用少的多，跟其缓存机制有关
 ## Glide的优势
 
 Glide提供的方法更多，并且可以加载动态图
+
+## 4. Glide相关的问题
+
+### 4.1 访问同一个地址，但资源改变的图片，无法跟新的问题
+
+在加载地址后面加入一个值`+ "?key=" + Math.random()`
+
+```
+.load(headUrl + "?key=" + Math.random())
+```
