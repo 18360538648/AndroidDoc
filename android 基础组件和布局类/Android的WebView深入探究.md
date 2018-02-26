@@ -22,7 +22,7 @@ ws.setUseWideViewPort(true);// 可任意比例缩放
 ## 3. WebViewClient和WebChromeClient
 
 * WebViewClient主要帮助WebView处理各种通知、请求事件
-* 主要辅助WebView处理JavaScript的对话框、网站图标、网站title、加载进度
+* 主要辅助WebView处理页面显示相关的，比如：JavaScript的对话框、网站图标、网站title、加载进度
 
 
 
